@@ -1,10 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-/* 
- * Useful methods and definitions
- */
-
+#define PI 3.141592654
+#define TWOPI 6.283185308
 
 #define DEBUG
 #endif

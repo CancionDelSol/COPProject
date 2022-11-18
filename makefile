@@ -1,4 +1,4 @@
-CC=gcc
+CC=g++
 CFLAG= -Wall -I. -O3
 
 TARGETS=fft
@@ -14,7 +14,7 @@ runAll: all
 fft: main.o microtime.o
 	$(CC) -o $@ $^
 
-fft.o: main.c microtime.h
+fft.o: main.cpp microtime.h
 	$(CC) $(CFLAG) -c $<
 
 microtime.o: microtime.c microtime.h
