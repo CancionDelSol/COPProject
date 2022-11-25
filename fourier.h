@@ -3,7 +3,7 @@
 
 #include <math.h>
 
-/* 
+/*
  * General Notes on fourier analysis
  * I'm assuming for this project, we
  * can just do a discrete version of
@@ -27,7 +27,7 @@
  */
 
 // We are only accounting for non-imaginary components
-// This means we can break down the exponential into it's 
+// This means we can break down the exponential into it's
 // cosine and sine components and then toss out the sin portion
 double FourierInnerSum(double baseFunctionAtK, /* The original function evaluated at index k */
                        int N,                  /* The total length of both arrays */
@@ -45,7 +45,7 @@ double GetFourierAtF_n(double* baseFunction, int N, int n) {
         sum += FourierInnerSum(baseFunctionAtK, N, k, n);
     }
     return sum;
-} 
+}
 
 void GetFourierTransform(
     double* baseFunction,  /* The array of values for the original function. */
