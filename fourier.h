@@ -2,6 +2,8 @@
 #define FOURIER_H
 
 #include <math.h>
+#include <stdio.h>
+#include "microtime.h"
 
 /*
  * General Notes on fourier analysis
@@ -52,8 +54,14 @@ void GetFourierTransform(
     int baseFunctionArrayLength, /* The length of the array */
     double* outputArray /* The output array for the calculated fourier transform */
 ) {
+    double time1 = microtime();
     for (int n = 0; n < baseFunctionArrayLength; n++) {
         outputArray[n] = GetFourierAtF_n(baseFunction, baseFunctionArrayLength, n);
     }
+    double time2 = microtime();
+
+    double t = time2 - time1;
+    printf("\nTime = %g us\n", t);
+    printf("Timer Resolution = %g us\n", getMicrotimeResolution());
 }
 #endif

@@ -59,8 +59,8 @@ void testSmallSampleSize() {
     inputSignal[2] = 9;
     inputSignal[3] = 16;
 
-    GetFourierTransform(inputSignal, sampleSize, output);
     std::cout << "Test #1 - testSmallSampleSize" << '\n';
+    GetFourierTransform(inputSignal, sampleSize, output);
     compareMax(output, sampleSize, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
 }
 
@@ -82,8 +82,8 @@ void testSineWave() {
         sinWave[i] = sin(stepSize * i);
     }
 
-    GetFourierTransform(sinWave, ARRAY_LENGTH, output);
     std::cout << "Test #2 - testSineWave" << '\n';
+    GetFourierTransform(sinWave, ARRAY_LENGTH, output);
     compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
 }
 
@@ -105,8 +105,8 @@ void testArbitraryContinuousSignal() {
         inputSignal[i] = 5 + 2 * cos((PI / 2)*i - (PI / 2)) + 3*cos(PI*i);
     }
 
-    GetFourierTransform(inputSignal, ARRAY_LENGTH, output);
     std::cout << "Test #3 - testArbitraryContinuousSignal" << '\n';
+    GetFourierTransform(inputSignal, ARRAY_LENGTH, output);
     compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
 }
 
