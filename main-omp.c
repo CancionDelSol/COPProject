@@ -1,5 +1,5 @@
 #include "utils.h"
-#include "fourier.h"
+#include "fourier-omp.h"
 #include <math.h>
 #include <stdlib.h>
 // #include <iostream>
