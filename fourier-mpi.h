@@ -1,6 +1,7 @@
 #ifndef FOURIER_H
 #define FOURIER_H
 
+#include "utils.h"
 #include <math.h>
 #include <stdio.h>
 #include "microtime.h"
@@ -55,11 +56,16 @@ double GetFourierAtF_n(double *baseFunction, int N, int n)
 void GetFourierTransform(
     double *baseFunction,        /* The array of values for the original function. */
     int baseFunctionArrayLength, /* The length of the array */
-    double *outputArray          /* The output array for the calculated fourier transform */
-)
+    double *outputArray,         /* The output array for the calculated fourier transform */
+    int l_idx_s,
+    int l_idx_e,
+    int my_rank)
 {
+    printf("\nFOURIER  ===> Process %d Start Index: %d End Index: %d", my_rank, l_idx_s, l_idx_e);
+
     double time1 = microtime();
-    for (int n = 0; n < baseFunctionArrayLength; n++)
+    // for (int n = 0; n < baseFunctionArrayLength; n++)
+    for (int n = l_idx_s; n < l_idx_e; n++)
     {
         outputArray[n] = GetFourierAtF_n(baseFunction, baseFunctionArrayLength, n);
     }
