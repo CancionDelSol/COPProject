@@ -2,13 +2,12 @@ CC=g++
 MM=mpicxx
 CFLAG= -Wall -I. -O3
 TARGETS= fft_mpi fft_omp
+PROCESS_COUNT= 5
 
 all: $(TARGETS)
 
-# Run all
-runAll: all
-	clear
-	./main
+runMPI: fft_mpi
+	mpirun -np $(PROCESS_COUNT) ./fft_mpi
 
 # MPI
 fft_mpi: fft_mpi.o microtime.o
