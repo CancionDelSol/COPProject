@@ -1,10 +1,7 @@
-#CC=g++
-#CC=gcc
-MM=mpicc
-
+CC=g++
+MM=mpicxx
 CFLAG= -Wall -I. -O3
-
-TARGETS=fft-mpi fft-omp
+TARGETS= fft_mpi fft_omp
 
 all: $(TARGETS)
 
@@ -14,20 +11,20 @@ runAll: all
 	./main
 
 # MPI
-fft-mpi: main_mpi.o microtime.o
+fft_mpi: fft_mpi.o microtime.o
 	$(MM) -o $@ $^ -lm
 
-fft-mpi.o:  main_mpi.c microtime.h
-	$(MM)  $(CFLAG) -c $<
+fft_mpi.o:  main_mpi.c microtime.h
+	$(MM) -o $@ $(CFLAG) -c $<
 
 # OpenMP
-fft-omp: main-omp.o microtime.o
+fft_omp: main_omp.o microtime.o
 	$(CC) -o $@ $^ -lm
 
-fft-omp.o: main-omp.c microtime.h
+fft_omp.o: main_omp.c microtime.h
 	$(CC)  $(CFLAG) -c $<
 
-
+# Timing
 microtime.o: microtime.c microtime.h
 	$(CC) $(CFLAG) -c $<
 

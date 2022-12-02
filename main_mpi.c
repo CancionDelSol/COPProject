@@ -1,8 +1,7 @@
 #include "utils.h"
-#include "fourier-mpi.h"
+#include "fourier_mpi.h"
 #include <math.h>
 #include <stdlib.h>
-// #include <iostream>
 #include <stdbool.h> // added
 #include <mpi.h>
 
@@ -72,8 +71,8 @@ void testSmallSampleSize(int my_rank, int comm_sz, MPI_Comm comm)
     double *inputSignal = NULL;
     double *output = NULL;
 
-    inputSignal = malloc(sizeof(double) * sampleSize);
-    output = malloc(sizeof(double) * sampleSize);
+    inputSignal = (double*)malloc(sizeof(double) * sampleSize);
+    output = (double*)malloc(sizeof(double) * sampleSize);
     for (int i = 0; i < sampleSize; i++)
     {
         output[i] = 0;
@@ -121,8 +120,8 @@ void testSineWave(int my_rank, int comm_sz, MPI_Comm comm)
 
     // Generate test sine wave input signal
     // double *sinWave = (double *)malloc(sizeof(double) * ARRAY_LENGTH);
-    double *inputSignal = malloc(sizeof(double) * ARRAY_LENGTH);
-    double *output = malloc(sizeof(double) * ARRAY_LENGTH);
+    double *inputSignal = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
+    double *output = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
 
     // Expected test results
     int EXPECTED_INDEX = 996;
@@ -166,8 +165,8 @@ void testArbitraryContinuousSignal(int my_rank, int comm_sz, MPI_Comm comm)
     // input_signal(t) = 5 + 2cos(2*PI*t - 90 deg) + 3cos(4*PIT*t)
     // input_signal(t) components = DC + 1Hz + 2Hz
     // sample rate = 4 Hz
-    double *inputSignal = malloc(sizeof(double) * ARRAY_LENGTH);
-    double *output = malloc(sizeof(double) * ARRAY_LENGTH);
+    double *inputSignal = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
+    double *output = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
 
     // Expected test results
     int EXPECTED_INDEX = 0;
