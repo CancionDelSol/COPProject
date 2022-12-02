@@ -32,87 +32,96 @@ void compareMax(double *signalArray, int sampleSize, int expectedIndex, double e
     // Report expected results from test
     if (greatestValIndex == expectedIndex)
     {
-        // std::cout << "PASS - ";
         printf("PASS - ");
     }
     else
     {
-        // std::cout << "FAIL - ";
         printf("FAIL - ");
     }
-    // std::cout << "Index of Greatest Value (expected, actual): " << expectedIndex << ", " << greatestValIndex << '\n';
 
     printf("Index of Greatest Value (expected, actual): %d, %d\n", expectedIndex, greatestValIndex);
 
     if (approximatelyEqual(expectedValue, greatestValue, epsilon))
     {
-        // std::cout << "PASS - ";
         printf("PASS - ");
     }
     else
     {
-        // std::cout << "FAIL - ";
         printf("FAIL - ");
     }
-    // std::cout << "Value of Greatest Value (expected, actual): " << expectedValue << ", " << greatestValue << '\n'<< '\n';
     printf("Value of Greatest Value (expected, actual): %lf, %lf\n ", expectedValue, greatestValue);
 }
 
 // Test #1 - Generate a simple input signal of small sample size (4)
-void testSmallSampleSize(int my_rank, int comm_sz, MPI_Comm comm)
+void testSmallSampleSize(int my_rank, int processCount, MPI_Comm comm)
 {
     int sampleSize = 4;
-    int l_sz = sampleSize / comm_sz;
+    int l_sz = sampleSize / (processCount - 1);
     int l_idx_s = my_rank * l_sz;
     int l_idx_e = l_idx_s + l_sz;
-
-    printf("\nProcess: %d ===> start index: %d end index: %d local size: %d", my_rank, l_idx_s, l_idx_e, l_sz);
 
     double *inputSignal = NULL;
     double *output = NULL;
 
+    // Allocate memory for the input and output arrays
     inputSignal = (double*)malloc(sizeof(double) * sampleSize);
     output = (double*)malloc(sizeof(double) * sampleSize);
     for (int i = 0; i < sampleSize; i++)
-    {
         output[i] = 0;
-    }
 
     inputSignal[0] = 1;
     inputSignal[1] = 4;
     inputSignal[2] = 9;
     inputSignal[3] = 16;
 
-    // MPI_Bcast(inputSignal, sampleSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    // MPI_Bcast(output, sampleSize, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
     // Expected test results
     int EXPECTED_INDEX = 0;
     double EXPECTED_VALUE = 30;
-    double EPSILON = 0.1;
+    double EPSILON = 0.001;
 
-    MPI_Gather(inputSignal, ARRAY_LENGTH, MPI_DOUBLE,
-               output, ARRAY_LENGTH, MPI_DOUBLE, 0, comm);
-    printf("\nTest #1 - testSmallSampleSize");
+    if (my_rank == 0)
+        printf("\nTest #1 - testSmallSampleSize\n");
 
-    GetFourierTransform(inputSignal, sampleSize, output, l_idx_s, l_idx_e, my_rank);
-    printf("\nProccess %d ===> Printing the Out Array Elements: ", my_rank);
+    if (my_rank == 0) {
+        // Gather the results from the other processes
+        for (int curProcess = 1; curProcess < processCount; curProcess++) {
+            double response[l_sz] = { 0 };
+            MPI_Status status;
+            MPI_Recv(&response, l_sz, MPI_DOUBLE, curProcess, 1, comm, &status);
+            printf("Received response from %d -> ", curProcess);
+            for (int k = 0; k < l_sz; k++) {
+                printf("%.2f ", response[k]);
+            } printf("\n");
 
-    for (int i = 0; i < sampleSize; i++)
-        printf("%lf ", output[i]);
+            int startIndex = (curProcess - 1) * l_sz;
+            for (int i = 0; i < l_sz; i++) {
+                output[startIndex + i] = response[i];
+            }
+        }
+    } else {
+        // Get the section of the output array for this process
+        GetFourierTransform(inputSignal, sampleSize, output, l_idx_s, l_idx_e, my_rank);
 
-    // if (my_rank == 0)
-    compareMax(output, sampleSize, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+        // Send results back to process 0
+        double msg[l_sz] = { 0 };
+        for (int i = 0; i < l_sz; i++) {
+            msg[i] = output[l_idx_s + i];
+        }
+        MPI_Send(&msg, l_sz, MPI_DOUBLE, 0, 1, comm);
+    }
 
-    MPI_Barrier(comm);
-    // free(output);
-    // free(inputSignal);
+    if (my_rank == 0)
+        compareMax(output, sampleSize, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+
+    // Free the allocated memory
+    free(output);
+    free(inputSignal);
 }
 
 // Test #2 - Generate a sine wave of 4 periods with sample size 1000
-void testSineWave(int my_rank, int comm_sz, MPI_Comm comm)
+void testSineWave(int my_rank, int processCount, MPI_Comm comm)
 {
-    int l_sz = ARRAY_LENGTH / comm_sz;
+    int l_sz = ARRAY_LENGTH / processCount;
     int l_idx_s = my_rank * l_sz;
     int l_idx_e = l_idx_s + l_sz;
 
@@ -154,9 +163,9 @@ void testSineWave(int my_rank, int comm_sz, MPI_Comm comm)
 }
 
 // Test #3 - Generate an arbitrary continuous signal with sample size 1000
-void testArbitraryContinuousSignal(int my_rank, int comm_sz, MPI_Comm comm)
+void testArbitraryContinuousSignal(int my_rank, int processCount, MPI_Comm comm)
 {
-    int l_sz = ARRAY_LENGTH / comm_sz;
+    int l_sz = ARRAY_LENGTH / processCount;
     int l_idx_s = my_rank * l_sz;
     int l_idx_e = l_idx_s + l_sz;
 
@@ -199,19 +208,66 @@ void testArbitraryContinuousSignal(int my_rank, int comm_sz, MPI_Comm comm)
 
 int main(int argc, char **argv)
 {
-    int my_rank, comm_sz;
-    /* Let the system do what it needs to start up MPI */
+    // This processes rank and process count
+    int my_rank, processCount;
+
+    // Initialize MPI framework
     MPI_Init(NULL, NULL);
     MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &comm_sz);
+    MPI_Comm_size(MPI_COMM_WORLD, &processCount);
+
+    // Use world scope communication
     MPI_Comm comm = MPI_COMM_WORLD;
-    printf("\n Process %d is running", my_rank);
 
-    testSmallSampleSize(my_rank, comm_sz, comm);
-    testSineWave(my_rank, comm_sz, comm);
-    testArbitraryContinuousSignal(my_rank, comm_sz, comm);
+    // Small sample size test
+    MPI_Barrier(comm);
+    if (my_rank == 0) {
+        double time1 = microtime();
+        testSmallSampleSize(my_rank, processCount, comm);
+        double time2 = microtime();
 
+        double t = time2 - time1;
+        printf("\nTime = %g us\n", t);
+        printf("Timer Resolution = %g us\n", getMicrotimeResolution());
+    } else {
+        testSmallSampleSize(my_rank, processCount, comm);
+    }
+    
+    /*
+    // Sine wave test
+    MPI_Barrier(comm);
+    if (my_rank == 0) {
+        double time1 = microtime();
+        testSineWave(my_rank, processCount, comm);
+        double time2 = microtime();
+
+        double t = time2 - time1;
+        printf("\nTime = %g us\n", t);
+        printf("Timer Resolution = %g us\n", getMicrotimeResolution());
+    } else {
+        testSineWave(my_rank, processCount, comm);
+    }
+    */
+    
+    /*
+    // Arbitrary continuous signal test
+    MPI_Barrier(comm);
+    if (my_rank == 0) {
+        double time1 = microtime();
+        testArbitraryContinuousSignal(my_rank, processCount, comm);
+        double time2 = microtime();
+
+        double t = time2 - time1;
+        printf("\nTime = %g us\n", t);
+        printf("Timer Resolution = %g us\n", getMicrotimeResolution());
+    } else {
+        testArbitraryContinuousSignal(my_rank, processCount, comm);
+    }
+    */
+
+    // Pause before finalizing
     MPI_Barrier(comm);
 
+    // Finalize
     MPI_Finalize();
 }

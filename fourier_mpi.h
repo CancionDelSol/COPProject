@@ -61,18 +61,7 @@ void GetFourierTransform(
     int l_idx_e,
     int my_rank)
 {
-    printf("\nFOURIER  ===> Process %d Start Index: %d End Index: %d", my_rank, l_idx_s, l_idx_e);
-
-    double time1 = microtime();
-    // for (int n = 0; n < baseFunctionArrayLength; n++)
     for (int n = l_idx_s; n < l_idx_e; n++)
-    {
         outputArray[n] = GetFourierAtF_n(baseFunction, baseFunctionArrayLength, n);
-    }
-    double time2 = microtime();
-
-    double t = time2 - time1;
-    printf("\nTime = %g us\n", t);
-    printf("Timer Resolution = %g us\n", getMicrotimeResolution());
 }
 #endif
