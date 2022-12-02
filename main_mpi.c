@@ -175,11 +175,9 @@ void testSineWave(int my_rank, int processCount, MPI_Comm comm)
 // Test #3 - Generate an arbitrary continuous signal with sample size 1000
 void testArbitraryContinuousSignal(int my_rank, int processCount, MPI_Comm comm)
 {
-    int l_sz = ARRAY_LENGTH / processCount;
-    int l_idx_s = my_rank * l_sz;
+    int l_sz = ARRAY_LENGTH / (processCount-1);
+    int l_idx_s = (my_rank-1) * l_sz;
     int l_idx_e = l_idx_s + l_sz;
-
-    printf("\nTEST-3  Process: %d ===> start index: %d end index: %d local size: %d", my_rank, l_idx_s, l_idx_e, l_sz);
 
     // input_signal(t) = 5 + 2cos(2*PI*t - 90 deg) + 3cos(4*PIT*t)
     // input_signal(t) components = DC + 1Hz + 2Hz
@@ -194,26 +192,41 @@ void testArbitraryContinuousSignal(int my_rank, int processCount, MPI_Comm comm)
 
     // Generate input signal
     for (int i = 0; i < ARRAY_LENGTH; i++)
-    {
         inputSignal[i] = 5 + 2 * cos((PI / 2) * i - (PI / 2)) + 3 * cos(PI * i);
-    }
-
-    // if (my_rank == 0)
-    MPI_Gather(inputSignal, ARRAY_LENGTH, MPI_DOUBLE,
-               output, ARRAY_LENGTH, MPI_DOUBLE, 0, comm);
-
-    // std::cout << "Test #3 - testArbitraryContinuousSignal" << '\n';
-    printf("\nTest #3 - testArbitraryContinuousSignal");
-    GetFourierTransform(inputSignal, ARRAY_LENGTH, output, l_idx_s, l_idx_e, my_rank);
 
     if (my_rank == 0)
-    {
-        compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+        printf("\nTest #3 - testArbitraryContinuousSignal\n");
+
+    if (my_rank == 0) {
+        // Gather the results from the other processes
+        for (int curProcess = 1; curProcess < processCount; curProcess++) {
+            double response[l_sz] = { 0 };
+            MPI_Status status;
+            MPI_Recv(&response, l_sz, MPI_DOUBLE, curProcess, 1, comm, &status);
+
+            int startIndex = (curProcess - 1) * l_sz;
+            for (int i = 0; i < l_sz; i++) {
+                output[startIndex + i] = response[i];
+            }
+        }
+    }else {
+        // Get the section of the output array for this process
+        GetFourierTransform(inputSignal, ARRAY_LENGTH, output, l_idx_s, l_idx_e, my_rank);
+
+        // Send results back to process 0
+        double msg[l_sz] = { 0 };
+        for (int i = 0; i < l_sz; i++) {
+            msg[i] = output[l_idx_s + i];
+        }
+        MPI_Send(&msg, l_sz, MPI_DOUBLE, 0, 1, comm);
     }
 
-    MPI_Barrier(comm);
-    // free(output);
-    // free(inputSignal);
+    if (my_rank == 0)
+        compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+
+    free(output);
+    free(inputSignal);
+
 }
 
 int main(int argc, char **argv)
@@ -257,7 +270,6 @@ int main(int argc, char **argv)
         testSineWave(my_rank, processCount, comm);
     }
     
-    /*
     // Arbitrary continuous signal test
     MPI_Barrier(comm);
     if (my_rank == 0) {
@@ -271,7 +283,6 @@ int main(int argc, char **argv)
     } else {
         testArbitraryContinuousSignal(my_rank, processCount, comm);
     }
-    */
 
     // Pause before finalizing
     MPI_Barrier(comm);
