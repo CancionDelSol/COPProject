@@ -110,65 +110,6 @@ void testSmallSampleSize(int my_rank, int comm_sz, MPI_Comm comm)
     // free(inputSignal);
 }
 
-void testSmallSampleSize_Iman(int my_rank, int comm_sz, MPI_Comm comm)
-
-{
-
-    int sampleSize = 4;
-
-    int l_sz = sampleSize / comm_sz; // 2
-
-    int l_idx_s = my_rank * l_sz; // 0
-
-    int l_idx_e = l_idx_s + l_sz; // 2
-
-    double *inputSignal = (double *)malloc(sizeof(double) * sampleSize);
-
-    double *output = (double *)malloc(sizeof(double) * sampleSize);
-
-    // Expected test results
-
-    int EXPECTED_INDEX = 0;
-
-    double EXPECTED_VALUE = 30;
-
-    double EPSILON = 0.1;
-
-    if (my_rank == 0)
-    {
-
-        // Generate input signal
-
-        inputSignal[0] = 1;
-
-        inputSignal[1] = 4;
-
-        inputSignal[2] = 9;
-
-        inputSignal[3] = 16;
-    }
-
-    MPI_Scatter(inputSignal, ARRAY_LENGTH, MPI_DOUBLE,
-
-                output, ARRAY_LENGTH, MPI_DOUBLE, 0, comm);
-
-    printf("\nTest #1 - testSmallSampleSize");
-
-    GetFourierTransform(inputSignal, sampleSize, output, l_idx_s, l_idx_e, my_rank);
-
-    compareMax(output, sampleSize, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
-
-    MPI_Barrier(comm);
-
-    // if (my_rank==0){
-
-    //  MPI_Gather(inputSignal, ARRAY_LENGTH, MPI_DOUBLE,
-
-    //           output, ARRAY_LENGTH, MPI_DOUBLE, 0, comm);
-
-    //}
-}
-
 // Test #2 - Generate a sine wave of 4 periods with sample size 1000
 void testSineWave(int my_rank, int comm_sz, MPI_Comm comm)
 {
@@ -269,7 +210,6 @@ int main(int argc, char **argv)
     printf("\n Process %d is running", my_rank);
 
     testSmallSampleSize(my_rank, comm_sz, comm);
-    // testSmallSampleSize_Iman(my_rank, comm_sz, comm);
     testSineWave(my_rank, comm_sz, comm);
     testArbitraryContinuousSignal(my_rank, comm_sz, comm);
 
