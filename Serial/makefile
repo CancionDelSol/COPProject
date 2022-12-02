@@ -12,7 +12,7 @@ runAll: all
 
 # Original unoptimized version
 fft: main.o microtime.o
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ -lm
 
 fft.o: main.cpp microtime.h
 	$(CC) $(CFLAG) -c $<
