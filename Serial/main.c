@@ -2,8 +2,7 @@
 #include "fourier.h"
 #include <math.h>
 #include <stdlib.h>
-// #include <iostream>
-#include <stdbool.h> // added
+#include <stdbool.h>
 
 #define ARRAY_LENGTH 1000
 
@@ -32,29 +31,23 @@ void compareMax(double *signalArray, int sampleSize, int expectedIndex, double e
     // Report expected results from test
     if (greatestValIndex == expectedIndex)
     {
-        // std::cout << "PASS - ";
         printf("PASS - ");
     }
     else
     {
-        // std::cout << "FAIL - ";
         printf("FAIL - ");
     }
-    // std::cout << "Index of Greatest Value (expected, actual): " << expectedIndex << ", " << greatestValIndex << '\n';
 
     printf("Index of Greatest Value (expected, actual): %d, %d\n", expectedIndex, greatestValIndex);
 
     if (approximatelyEqual(expectedValue, greatestValue, epsilon))
     {
-        // std::cout << "PASS - ";
         printf("PASS - ");
     }
     else
     {
-        // std::cout << "FAIL - ";
         printf("FAIL - ");
     }
-    // std::cout << "Value of Greatest Value (expected, actual): " << expectedValue << ", " << greatestValue << '\n'<< '\n';
     printf("Value of Greatest Value (expected, actual): %lf, %lf\n ", expectedValue, greatestValue);
 }
 
@@ -128,7 +121,6 @@ void testArbitraryContinuousSignal()
         inputSignal[i] = 5 + 2 * cos((PI / 2) * i - (PI / 2)) + 3 * cos(PI * i);
     }
 
-    // std::cout << "Test #3 - testArbitraryContinuousSignal" << '\n';
     printf("\nTest #3 - testArbitraryContinuousSignal");
     GetFourierTransform(inputSignal, ARRAY_LENGTH, output);
     compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);

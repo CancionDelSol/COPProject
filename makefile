@@ -4,7 +4,7 @@ MM=mpicc
 
 CFLAG= -Wall -I. -O3
 
-TARGETS=fft fft-mpi fft-omp
+TARGETS=fft-mpi fft-omp
 
 all: $(TARGETS)
 
@@ -12,14 +12,6 @@ all: $(TARGETS)
 runAll: all
 	clear
 	./main
-
-# Original unoptimized version
-fft: main.o microtime.o
-	$(CC) -o $@ $^ -lm
-
-# fft.o: main.cpp microtime.h
-fft.o: main.c microtime.h
-	$(CC)  $(CFLAG) -c $<
 
 # MPI
 fft-mpi: main_mpi.o microtime.o
@@ -34,7 +26,7 @@ fft-omp: main-omp.o microtime.o
 
 fft-omp.o: main-omp.c microtime.h
 	$(CC)  $(CFLAG) -c $<
-	
+
 
 microtime.o: microtime.c microtime.h
 	$(CC) $(CFLAG) -c $<
