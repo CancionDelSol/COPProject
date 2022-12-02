@@ -57,7 +57,7 @@ void testSmallSampleSize(int my_rank, int processCount, MPI_Comm comm)
 {
     int sampleSize = 4;
     int l_sz = sampleSize / (processCount - 1);
-    int l_idx_s = my_rank * l_sz;
+    int l_idx_s = (my_rank-1) * l_sz;
     int l_idx_e = l_idx_s + l_sz;
 
     double *inputSignal = NULL;
@@ -88,10 +88,6 @@ void testSmallSampleSize(int my_rank, int processCount, MPI_Comm comm)
             double response[l_sz] = { 0 };
             MPI_Status status;
             MPI_Recv(&response, l_sz, MPI_DOUBLE, curProcess, 1, comm, &status);
-            printf("Received response from %d -> ", curProcess);
-            for (int k = 0; k < l_sz; k++) {
-                printf("%.2f ", response[k]);
-            } printf("\n");
 
             int startIndex = (curProcess - 1) * l_sz;
             for (int i = 0; i < l_sz; i++) {
@@ -121,14 +117,11 @@ void testSmallSampleSize(int my_rank, int processCount, MPI_Comm comm)
 // Test #2 - Generate a sine wave of 4 periods with sample size 1000
 void testSineWave(int my_rank, int processCount, MPI_Comm comm)
 {
-    int l_sz = ARRAY_LENGTH / processCount;
-    int l_idx_s = my_rank * l_sz;
+    int l_sz = ARRAY_LENGTH / (processCount - 1);
+    int l_idx_s = (my_rank-1) * l_sz;
     int l_idx_e = l_idx_s + l_sz;
 
-    printf("\nTEST-2  Process: %d ===> start index: %d end index: %d local size: %d", my_rank, l_idx_s, l_idx_e, l_sz);
-
     // Generate test sine wave input signal
-    // double *sinWave = (double *)malloc(sizeof(double) * ARRAY_LENGTH);
     double *inputSignal = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
     double *output = (double*)malloc(sizeof(double) * ARRAY_LENGTH);
 
@@ -141,25 +134,42 @@ void testSineWave(int my_rank, int processCount, MPI_Comm comm)
     double stepSize = (4.0 * TWOPI) / ARRAY_LENGTH;
 
     for (int i = 0; i < ARRAY_LENGTH; i++)
-    {
-        // sinWave[i] = sin(stepSize * i);
         inputSignal[i] = sin(stepSize * i);
-    }
-
-    // std::cout << "Test #2 - testSineWave" << '\n';
-    printf("\nTest #2 - testSineWave");
 
     if (my_rank == 0)
-        MPI_Gather(inputSignal, ARRAY_LENGTH, MPI_DOUBLE,
-                   output, ARRAY_LENGTH, MPI_DOUBLE, 0, comm);
+        printf("\nTest #2 - testSineWave\n");
 
-    GetFourierTransform(inputSignal, ARRAY_LENGTH, output, l_idx_s, l_idx_e, my_rank);
+    if (my_rank == 0) {
+        // Gather the results from the other processes
+        for (int curProcess = 1; curProcess < processCount; curProcess++) {
+            double response[l_sz] = { 0 };
+            MPI_Status status;
+            MPI_Recv(&response, l_sz, MPI_DOUBLE, curProcess, 1, comm, &status);
 
-    compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+            int startIndex = (curProcess - 1) * l_sz;
+            for (int i = 0; i < l_sz; i++) {
+                output[startIndex + i] = response[i];
+            }
+        }
+    }else {
+        // Get the section of the output array for this process
+        GetFourierTransform(inputSignal, ARRAY_LENGTH, output, l_idx_s, l_idx_e, my_rank);
 
-    // MPI_Barrier(comm);
-    // free(inputSignal);
-    // free(output);
+        // Send results back to process 0
+        double msg[l_sz] = { 0 };
+        for (int i = 0; i < l_sz; i++) {
+            msg[i] = output[l_idx_s + i];
+        }
+        MPI_Send(&msg, l_sz, MPI_DOUBLE, 0, 1, comm);
+    }
+
+    if (my_rank == 0)
+        compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+
+    // Free the allocated memory
+    free(output);
+    free(inputSignal);
+
 }
 
 // Test #3 - Generate an arbitrary continuous signal with sample size 1000
@@ -233,7 +243,6 @@ int main(int argc, char **argv)
         testSmallSampleSize(my_rank, processCount, comm);
     }
     
-    /*
     // Sine wave test
     MPI_Barrier(comm);
     if (my_rank == 0) {
@@ -247,7 +256,6 @@ int main(int argc, char **argv)
     } else {
         testSineWave(my_rank, processCount, comm);
     }
-    */
     
     /*
     // Arbitrary continuous signal test
