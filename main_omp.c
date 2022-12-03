@@ -148,6 +148,11 @@ void testArbitraryContinuousSignal()
 
 int main(int argc, char **argv)
 {
+    int procCount = omp_get_num_procs();
+    if (argc > 1) {
+        procCount = atoi(argv[1]);
+    }
+
     // For time outputs
     double time1;
     double time2;
@@ -155,7 +160,7 @@ int main(int argc, char **argv)
 
     // Set our number of threads to the
     //  number of available processors
-    omp_set_num_threads(omp_get_num_procs());
+    omp_set_num_threads(procCount);
 
     // Small sample size test
     time1 = microtime();

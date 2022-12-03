@@ -10,7 +10,11 @@ runMPI: fft_mpi
 	mpirun -np $(PROCESS_COUNT) ./fft_mpi
 
 runOMP: fft_omp
-	./fft_omp
+	./fft_omp 1
+	./fft_omp 2
+	./fft_omp 4
+	./fft_omp 5
+	./fft_omp 8
 
 # MPI
 fft_mpi: fft_mpi.o microtime.o
