@@ -9,6 +9,9 @@ all: $(TARGETS)
 runMPI: fft_mpi
 	mpirun -np $(PROCESS_COUNT) ./fft_mpi
 
+runOMP: fft_omp
+	./fft_omp
+
 # MPI
 fft_mpi: fft_mpi.o microtime.o
 	$(MM) -o $@ $^ -lm
@@ -17,11 +20,11 @@ fft_mpi.o:  main_mpi.c microtime.h
 	$(MM) -o $@ $(CFLAG) -c $<
 
 # OpenMP
-fft_omp: main_omp.o microtime.o
-	$(CC) -o $@ $^ -lm -fopenmp
+fft_omp: fft_omp.o microtime.o
+	$(CC) -lm -fopenmp -o $@ $^ 
 
 fft_omp.o: main_omp.c microtime.h
-	$(CC) $(CFLAG) -fopenmp -c $<
+	$(CC) -fopenmp $(CFLAG) -o $@ -c $<
 
 # Timing
 microtime.o: microtime.c microtime.h

@@ -153,9 +153,6 @@ int main(int argc, char **argv)
     double time2;
     double t;
 
-    // This processes rank and process count
-    int my_rank, processCount;
-
     // Set our number of threads to the
     //  number of available processors
     omp_set_num_threads(omp_get_num_procs());

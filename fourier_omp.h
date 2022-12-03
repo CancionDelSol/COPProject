@@ -44,8 +44,6 @@ double FourierInnerSum(double baseFunctionAtK, /* The original function evaluate
     return baseFunctionAtK * termOne;
 }
 
-
-
 void GetFourierTransform(
     double *baseFunction,        /* The array of values for the original function. */
     int baseFunctionArrayLength, /* The length of the array */
@@ -53,11 +51,11 @@ void GetFourierTransform(
 )
 {
     int N = baseFunctionArrayLength;
-    #pragma omp parallel for schedule(dynamic,4)
-    for (int n = 0; n < N; n++) {
+    int n,k;
+    #pragma omp parallel for schedule(dynamic,32) private(n, k) shared(outputArray)
+    for (n = 0; n < N; n++) {
         double sum = 0.0;
-        # pragma omp parallel reduction(+: sum)
-        for (int k = 0; k <N ; k++) {
+        for (k = 0; k <N ; k++) {
             double baseFunctionAtK = baseFunction[k];
             sum += FourierInnerSum(baseFunctionAtK, N, k, n);
         }
