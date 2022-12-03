@@ -2,9 +2,13 @@ CC=g++
 MM=mpicxx
 CFLAG= -Wall -I. -O3
 TARGETS= fft_mpi fft_omp
-PROCESS_COUNT= 5
+PROCESS_COUNT= 2
 
 all: $(TARGETS)
+
+runMPI: fft_mpi_col
+	mpirun -np $(PROCESS_COUNT) ./fft_mpi_col
+
 
 runMPI: fft_mpi
 	mpirun -np $(PROCESS_COUNT) ./fft_mpi
