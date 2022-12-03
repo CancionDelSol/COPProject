@@ -3,7 +3,9 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <omp.h>
 #include "microtime.h"
+#include <omp.h>
 
 /*
  * General Notes on fourier analysis
@@ -42,16 +44,7 @@ double FourierInnerSum(double baseFunctionAtK, /* The original function evaluate
     return baseFunctionAtK * termOne;
 }
 
-double GetFourierAtF_n(double *baseFunction, int N, int n)
-{
-    double sum = 0.0;
-    for (int k = 0; k < N; k++)
-    {
-        double baseFunctionAtK = baseFunction[k];
-        sum += FourierInnerSum(baseFunctionAtK, N, k, n);
-    }
-    return sum;
-}
+
 
 void GetFourierTransform(
     double *baseFunction,        /* The array of values for the original function. */
@@ -59,15 +52,16 @@ void GetFourierTransform(
     double *outputArray          /* The output array for the calculated fourier transform */
 )
 {
-    double time1 = microtime();
-    for (int n = 0; n < baseFunctionArrayLength; n++)
-    {
-        outputArray[n] = GetFourierAtF_n(baseFunction, baseFunctionArrayLength, n);
+    int N = baseFunctionArrayLength;
+    #pragma omp parallel for schedule(dynamic,4)
+    for (int n = 0; n < N; n++) {
+        double sum = 0.0;
+        # pragma omp parallel reduction(+: sum)
+        for (int k = 0; k <N ; k++) {
+            double baseFunctionAtK = baseFunction[k];
+            sum += FourierInnerSum(baseFunctionAtK, N, k, n);
+        }
+        outputArray[n] = sum;
     }
-    double time2 = microtime();
-
-    double t = time2 - time1;
-    printf("\nTime = %g us\n", t);
-    printf("Timer Resolution = %g us\n", getMicrotimeResolution());
 }
 #endif

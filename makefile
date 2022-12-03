@@ -18,10 +18,10 @@ fft_mpi.o:  main_mpi.c microtime.h
 
 # OpenMP
 fft_omp: main_omp.o microtime.o
-	$(CC) -o $@ $^ -lm
+	$(CC) -o $@ $^ -lm -fopenmp
 
 fft_omp.o: main_omp.c microtime.h
-	$(CC)  $(CFLAG) -c $<
+	$(CC) $(CFLAG) -fopenmp -c $<
 
 # Timing
 microtime.o: microtime.c microtime.h

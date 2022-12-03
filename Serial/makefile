@@ -8,9 +8,9 @@ all: $(TARGETS)
 # Run all
 runAll: all
 	clear
-	./main
+	./fft
 
-# Original unoptimized version
+# Original unparallelized version
 fft: main.o microtime.o
 	$(CC) -o $@ $^ -lm
 
