@@ -63,6 +63,8 @@ void testSmallSampleSize(int my_rank, int comm_sz, MPI_Comm comm)
 {
     int sampleSize = 4;
     int l_sz = sampleSize / comm_sz; // size per process
+    if (l_sz == 0)
+        l_sz = 1;
     int l_idx_s = my_rank * l_sz;    // local start index
     int l_idx_e = l_idx_s + l_sz;    // local end index
 
@@ -126,7 +128,7 @@ void testSineWave(int my_rank, int comm_sz, MPI_Comm comm)
         printf("\nTest #2 - testSineWave");
 
     GetFourierTransform(sinWave, ARRAY_LENGTH, output, l_idx_s, l_idx_e, my_rank);
-
+    
     MPI_Gather(output, l_sz, MPI_DOUBLE, root_buf, l_sz, MPI_DOUBLE, 0, comm);
 
     if (my_rank == 0)
@@ -173,7 +175,7 @@ void testArbitraryContinuousSignal(int my_rank, int comm_sz, MPI_Comm comm)
     MPI_Gather(output, l_sz, MPI_DOUBLE, root_buf, l_sz, MPI_DOUBLE, 0, comm);
 
     if (my_rank == 0)
-        compareMax(output, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
+        compareMax(root_buf, ARRAY_LENGTH, EXPECTED_INDEX, EXPECTED_VALUE, EPSILON);
 
     // sync processes and clean-up
     MPI_Barrier(comm);
