@@ -6,9 +6,9 @@ TARGETS= fft_mpi fft_omp fft_mpi_col
 all: $(TARGETS)
 
 runMPI: fft_mpi
-	#mpirun -np 2 ./fft_mpi
-	#mpirun -np 4 ./fft_mpi
-	#mpirun -np 5 ./fft_mpi
+	mpirun -np 2 ./fft_mpi
+	mpirun -np 4 ./fft_mpi
+	mpirun -np 5 ./fft_mpi
 
 runMPICol: fft_mpi_col
 	mpirun -np 2 ./fft_mpi_col
