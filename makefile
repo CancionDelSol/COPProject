@@ -16,11 +16,18 @@ runOMP: fft_omp
 	./fft_omp 5
 	./fft_omp 8
 
-# MPI
+# MPI-PEER
 fft_mpi: fft_mpi.o microtime.o
 	$(MM) -o $@ $^ -lm
 
 fft_mpi.o:  main_mpi.c microtime.h
+	$(MM) -o $@ $(CFLAG) -c $<
+
+# MPI-COLLECTIVE
+fft_mpi_col: fft_mpi_col.o microtime.o
+	$(MM) -o $@ $^ -lm
+
+fft_mpi_col.o:  main_mpi_col.c microtime.h
 	$(MM) -o $@ $(CFLAG) -c $<
 
 # OpenMP
