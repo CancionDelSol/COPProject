@@ -19,13 +19,36 @@ In the continuous domain, this is completed through the use of an integral over 
 
 The inner loop performs a multiplication between an element inside the source array (base function output) and an exponential (Euler representation of the harmonic function). Each element of the output array is independent of the element prior or subsequent, thus rendering it parallelizable.
 
-# Unit tests
+# Serial Implementation
 
 Run from the console:
 
 ```
+cd Serial
 make fft
 ./fft
+```
+
+# OpenMP
+
+Run from the console:
+
+```
+make runOMP
+```
+
+# MPI Gather
+
+Run from the console:
+
+```
+make runMPICol
+```
+
+# MPI Send/Receive
+
+```
+make runMPI
 ```
 
 Results will be displayed in console.
