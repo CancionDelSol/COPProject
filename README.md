@@ -1,8 +1,3 @@
-clear
-export TMPDIR=\tmp
-mpicc -g -Wall -o3 -o main-mpi main-mpi.c microtime.c -lm
-mpiexec -n 2 ./main-mpi
-
 # Project Team Members:
 
 - Roger Johnson
