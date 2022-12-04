@@ -1,0 +1,190 @@
+Output from each implementation:
+
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 46 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 12852 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 12961 us
+Timer Resolution = 1 us
+
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 62 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 4337 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 4313 us
+Timer Resolution = 1 us
+
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 54 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 3331 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 3337 us
+Timer Resolution = 1 us
+
+FTT-NPI-COLLECTIVE Testing with 2 Processes
+=============================================
+
+Test #1 - testSmallSampleSize
+Time = 27 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Test #2 - testSineWave
+Time = 6594 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Test #3 - testArbitraryContinuousSignal
+Time = 6724 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+FTT-NPI-COLLECTIVE Testing with 4 Processes
+=============================================
+
+Test #1 - testSmallSampleSize
+Time = 8 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Test #2 - testSineWave
+Time = 3294 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Test #3 - testArbitraryContinuousSignal
+Time = 3297 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+FTT-NPI-COLLECTIVE Testing with 5 Processes
+=============================================
+
+Test #1 - testSmallSampleSize
+Time = 8 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Test #2 - testSineWave
+Time = 2633 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Test #3 - testArbitraryContinuousSignal
+Time = 2633 us
+Timer Resolution = 1 us
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 114 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 6669 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 6673 us
+Timer Resolution = 1 us
+
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 170 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 3380 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 3392 us
+Timer Resolution = 1 us
+
+Test #1 - testSmallSampleSize
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 30.000000, 30.000000
+ 
+Time = 194 us
+Timer Resolution = 1 us
+
+Test #2 - testSineWave
+PASS - Index of Greatest Value (expected, actual): 996, 996
+PASS - Value of Greatest Value (expected, actual): 0.000205, 0.000205
+ 
+Time = 2916 us
+Timer Resolution = 1 us
+
+Test #3 - testArbitraryContinuousSignal
+PASS - Index of Greatest Value (expected, actual): 0, 0
+PASS - Value of Greatest Value (expected, actual): 5000.000000, 5000.000000
+ 
+Time = 2946 us
+Timer Resolution = 1 us
